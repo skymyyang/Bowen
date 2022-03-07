@@ -4,6 +4,8 @@
 
 基于vmware搭建的3台虚拟机。双网卡，双硬盘。
 
+参考的PDF文档：`https://qabwmobile.com.au/wp-content/uploads/2021/04/proxmox-%E6%90%AD%E5%BB%BAceph%E6%9C%8D%E5%8A%A1.pdf`
+
 ### 修改国内源
 
 
