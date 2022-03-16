@@ -232,25 +232,157 @@ docker-compose down # 停止并删除vector
 
 ### loki
 
+#### loki组成
+
+- loki是主服务器，负责存储日志和处理查询。
+- promtail是代理，agent，负责搜集日志并将其发送给loki。
+- grafana是UI，可通过页面中的Explore，进行日志的查询。
+
+#### 部署
+
+通过docker-compose 快速部署loki。
+
+如果是生产环境中，不建议这样部署。本文是为了快速进行测试以及查询。
+
+```bash
+root@unode1:/tools/loki# pwd
+/tools/loki
+root@unode1:/tools/loki# ls
+docker-compose.yml  etc
+root@unode1:/tools/loki# cat docker-compose.yml
+```
+
+```yaml
+version: "3"
+
+services:
+  loki:
+    image: grafana/loki:2.4.2
+    hostname: loki
+    container_name: loki
+    restart: always
+    network_mode: "bridge"
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./etc:/etc/loki
+      - /etc/localtime:/etc/localtime:ro
+    command: -config.file=/etc/loki/loki-config.yaml
+
+
+  grafana:
+    image: grafana/grafana:8.3.3
+    hostname: grafana
+    container_name: grafana
+    restart: always
+    network_mode: "bridge"
+    ports:
+      - "3000:3000"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      GF_EXPLORE_ENABLED: "true"
+```
+
+loki的配置文件，这里loki的存储，采用的是本地文件系统，这里我们甚至都没有将存储挂载出来，因此当容器删除的时候，数据会丢失。这里的alertmanager我们没有安装。
+
+```bash
+root@unode1:/tools/loki# ls etc/loki-config.yaml
+etc/loki-config.yaml
+```
+
+```yaml
+auth_enabled: false
+
+server:
+  http_listen_port: 3100
+  grpc_listen_port: 9096
+
+common:
+  path_prefix: /tmp/loki
+  storage:
+    filesystem:
+      chunks_directory: /tmp/loki/chunks
+      rules_directory: /tmp/loki/rules
+  replication_factor: 1
+  ring:
+    instance_addr: 127.0.0.1
+    kvstore:
+      store: inmemory
+
+schema_config:
+  configs:
+    - from: 2020-10-24
+      store: boltdb-shipper
+      object_store: filesystem
+      schema: v11
+      index:
+        prefix: index_
+        period: 24h
+
+ruler:
+  alertmanager_url: http://localhost:9093
+```
+
+#### 通过grafana查询
+
+登录grafana，定义数据源为loki。
+
+![images](./images/loki-01.png)
+
+然后再grafana界面找到explore，默认应该就是loki，接下来，我们可以通过此页面进行日志查询。
+
+![images](./images/loki-02.png)
+
+在此界面中，我可以看到我们在vector中自己定义的标签，进行标签选择。
+
+![images](./images/loki-03.png)
+
+这里我们可以通过标签进行正则匹配，或者=好进行选择，来筛选日志。这类似于prometheus。
+
+例如上图中：
+
+```
+{key_message=~".*DEBUG.*"}
+```
+
+查询结果如下：
+
+![images](./images/loki-04.png)
 
 
 
+#### 选择器
 
+对于查询表达式的标签部分，将其包装在花括号中`{}`，然后使用键值对的语法来选择标签，多个标签表达式用逗号分隔，比如：
 
+```
+{key_message=~".*DEBUG.*",server_host="192.168.1.87"}
+```
 
-vector官方文档：`https://vector.dev/docs/reference/configuration/sources/kafka/`
+目前支持以下标签匹配运算符：
 
-loki的docker-compose安装文档：`https://grafana.com/docs/loki/latest/installation/docker/`
+- `=`等于
+- `!=`不相等
+- `=~`正则表达式匹配
+- `!~`不匹配正则表达式
 
-vector定义sinks到loki中`labels.*` 的定义：`https://github.com/vectordotdev/vector/issues/6435`
+### 参考文档
 
-loki官方的local配置文件：`https://github.com/grafana/loki/blob/main/cmd/loki/loki-local-config.yaml`
+- vector官方文档：`https://vector.dev/docs/reference/configuration/sources/kafka/`
 
-vector官方的vrl语言处理日志：`https://vector.dev/docs/reference/vrl/`
+- loki的docker-compose安装文档：`https://grafana.com/docs/loki/latest/installation/docker/`
 
-vector官方安装：`https://vector.dev/docs/setup/installation/`
+- vector定义sinks到loki中`labels.*` 的定义：`https://github.com/vectordotdev/vector/issues/6435`
 
-vector sink to loki：`https://vector.dev/docs/reference/configuration/sinks/loki/`
+- loki官方的local配置文件：`https://github.com/grafana/loki/blob/main/cmd/loki/loki-local-config.yaml`
+
+- vector官方的vrl语言处理日志：`https://vector.dev/docs/reference/vrl/`
+
+- vector官方安装：`https://vector.dev/docs/setup/installation/`
+
+- vector sink to loki：`https://vector.dev/docs/reference/configuration/sinks/loki/`
+- grafana日志聚合工具：`https://www.qikqiak.com/post/grafana-log-tool-loki/`
 
 
 
