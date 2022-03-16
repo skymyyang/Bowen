@@ -50,7 +50,7 @@ services:
 ```toml
 [sources.my_source_id]
 type = "kafka"
-bootstrap_servers = "47.93.220.218:29092,47.93.220.218:29093,47.93.220.218:29094"
+bootstrap_servers = "172.17.123.213:9092,172.17.123.214:9092,172.17.123.215:9092"
 commit_interval_ms = 1_000
 fetch_wait_max_ms = 100
 group_id = "consumer-vector-wwbgroup-test"
@@ -140,7 +140,7 @@ Filebeat---->Kafka  这个过程，我们想获取到原生日志的格式，可
 ```toml
 [sources.my_source_id]
 type = "kafka"
-bootstrap_servers = "47.93.220.218:29092,47.93.220.218:29093,47.93.220.218:29094"
+bootstrap_servers = "172.17.123.213:9092,172.17.123.214:9092,172.17.123.215:9092"
 commit_interval_ms = 1_000
 fetch_wait_max_ms = 100
 group_id = "consumer-vector-wwbgroup-test"
@@ -182,7 +182,7 @@ encoding = "json"
 ```toml
 [sources.my_source_id]
 type = "kafka"
-bootstrap_servers = "47.93.220.218:29092,47.93.220.218:29093,47.93.220.218:29094"
+bootstrap_servers = "172.17.123.213:9092,172.17.123.214:9092,172.17.123.215:9092"
 commit_interval_ms = 1_000
 fetch_wait_max_ms = 100
 group_id = "consumer-vector-wwbgroup-test"
