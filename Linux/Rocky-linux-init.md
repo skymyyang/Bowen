@@ -22,6 +22,7 @@ DNS1=114.114.114.114
 nmcli connection reload  #重载所有ifcfg或route到connection
 nmcli device reapply ens32 #使其生效
 nmcli device connect ens32 #功能同上
+nmcli device disconnect ens32
 nmcli device #查看device列表
 nmcli device show #查看所有详细信息
 ```
@@ -82,7 +83,7 @@ sed -e 's|^mirrorlist=|#mirrorlist=|g' \
 ```bash
 dnf install epel-release -y
 sed -i 's|^#baseurl=https://download.example/pub|baseurl=https://mirrors.aliyun.com|' /etc/yum.repos.d/epel*
-sed -i 's|^metalink|#metalink|' /etc/yum.repos.d/
+sed -i 's|^metalink|#metalink|' /etc/yum.repos.d/epel*
 ```
 
 ### ulimt参数优化

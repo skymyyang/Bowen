@@ -1,0 +1,23 @@
+# RockyLinux单节点以及自动化部署
+
+## 配置和管理服务器网卡
+
+`RockyLinux`继承至`RHEL`，且在`CentOS8`停止维护以后。
+
+`RockyLinux8` 与 `CentOS 7` 网络管理的区别也是`RHEL8`和`RHEL7`的区别:
+
+- 在`RHEL7`上，同时支持`network.service`和`NetworkManager.service`（简称NM）。默认情况下，这2个服务都有开启，但许多人都会将NM禁用掉。
+- 在`RHEL8`上，已经废弃`network.service`,且只能通过NM进行网络配置，包括动态IP和静态IP。在`RHEL8`上，必须开启NM，否则无法使用网络。且后续的RHEL版本中只能通过NM管理网络。
+
+在`RockyLinux8`中，依然可以使用如下命令手动安装传统的`network`服务：
+
+```sh
+dnf install network-scripts -y
+```
+
+鉴于此工具被官方抛弃，不建议继续使用。
+
+### nmcli命令管理网卡
+
+
+
