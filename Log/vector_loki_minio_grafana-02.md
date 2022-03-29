@@ -418,7 +418,15 @@ minio部署要求：
     $ systemctl enable nginx
     ```
 
-    
+14. 登录控制台进行查看
+
+    ```
+    https://s3-console-dev.example.com
+    minioadmin
+    minioadmin
+    ```
+
+    ![minio-01](./images/minio-01.png)
 
 #### ansible 自动化部署
 
