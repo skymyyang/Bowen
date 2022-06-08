@@ -100,10 +100,13 @@ nodes:
       readOnly: true
       selinuxRelabel: false
       propagation: HostToContainer
-      
- #获取集群信息
- sudo kubectl cluster-info --context kind-app-1-cluster
- #集群配置kubeconfig默认存放再/root/.kube/config当中
+ ---
+ 
+#创建集群
+kind create cluster --config kind-example-config.yaml
+#获取集群信息
+sudo kubectl cluster-info --context kind-app-1-cluster
+#集群配置kubeconfig默认存放再/root/.kube/config当中
 ```
 
 ### Kind 的镜像
