@@ -437,5 +437,19 @@ $ ansible-galaxy install atosatto.minio
 # 使用此命令进行初始化roles；此时会生成/root/.ansible/roles目录，然后删除rm -rf atosatto.minio即可
 ```
 
-### 基于minio部署loki
+### 部署alertmanager & grafana
+
+
+
+基于docker 和 docker-compose 部署 alertmanager 和 grafana
+
+详情参考 deploy文件夹下的monitor目录。
+
+部署的yaml
+
+
+
+
+
+
 

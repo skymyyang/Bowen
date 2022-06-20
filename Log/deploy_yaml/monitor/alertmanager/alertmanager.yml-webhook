@@ -1,0 +1,24 @@
+global:
+  resolve_timeout: 5m
+
+templates:
+  - '/etc/alertmanager/warn.tmpl'
+
+route:
+  group_by: ['alertname']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 30m
+  receiver: 'wechat'
+receivers:
+- name: 'wechat'
+  webhook_configs:
+  - url: 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=ad3e3719-ae38-422f-a28a-73935db64254'
+    send_resolved: true
+#    text: '{{ template "wechat.default.message" . }}'
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'instance', 'job']

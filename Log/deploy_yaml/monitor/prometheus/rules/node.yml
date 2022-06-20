@@ -1,0 +1,32 @@
+groups:
+- name: node_rules
+  rules:
+  # Alert for any instance that is unreachable for >3 minutes.
+  - alert: Cpu_Usage
+    expr: 100 - (avg(irate(node_cpu_seconds_total{mode="idle"}[1m])) * 100) > 80
+    for: 3m  #监测up=0持续3min，则发出告警
+    labels:
+      severity: warning
+    annotations:
+      summary: "{{ $labels.instance }} CPU 当前值为 {{ $value }}"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} CPU has been overload 80% for more than 3 minutes."
+
+  - alert: Memory_Usage
+    expr: 100 - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes) / (node_memory_MemTotal_bytes) * 100 > 80
+    for: 3m  #监测up=0持续3min，则发出告警
+    labels:
+      severity: warning
+    annotations:
+      summary: "{{ $labels.instance }} Memory 当前值为 {{ $value }}"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} Memory has been overload 80% for more than 3 minutes."
+
+  - alert: node_load5
+    expr: node_load5 > 2 * count by(instance)(node_cpu_seconds_total{mode="idle"})
+    for: 3m  #监测up=0持续3min，则发出告警
+    labels:
+      severity: warning
+    annotations:
+      summary: "{{ $labels.instance }} node_load5 当前值为 {{ $value }}"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} noed_load5 has been overload node_cpu_seconds_total for more than 3 minutes."
+
+

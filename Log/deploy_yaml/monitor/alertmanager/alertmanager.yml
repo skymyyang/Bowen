@@ -1,0 +1,26 @@
+global:
+  resolve_timeout: 5m
+
+
+# The directory from which notification templates are read.
+templates:
+  - '/usr/local/alertmanager/template/*.tmpl'
+
+route:
+  group_by: ['alertname', 'cluster', 'service']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 3h
+  receiver: 'web.hook'
+  routes:
+    - matchers:
+        - topic="logstash-log-test"
+      receiver: wwb.group.applog
+  
+receivers:
+- name: 'web.hook'
+  webhook_configs:
+  - url: 'http://127.0.0.1:8999/'
+- name: 'wwb.group.applog'
+  webhook_configs:
+  - url: 'http://127.0.0.1:8999/webhook?key=ad3e3719-ae38-422f-a28a-73935db64254'

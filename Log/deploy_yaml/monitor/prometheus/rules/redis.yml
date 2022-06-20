@@ -1,0 +1,69 @@
+groups:
+- name: redis
+  rules:
+  
+  - alert: reids down
+    expr: redis_up == 0
+    for: 1m
+    labels:
+      name: redis
+      severity: error
+    annotations:
+      summary: "redis down (instance {{ $labels.instance }})"
+      description: "redis instance is down"
+      value: "{{ $value }}"
+
+  - alert: reids client connection
+    expr: redis_connected_clients < 5
+    for: 1m
+    labels:
+      name: redis
+      severity: Critical
+    annotations:
+      summary: "{{$labels.mountpoint}} redis client connection Too few connections"
+      description: "{{$labels.mountpoint }} redis client connectionToo few connections 少于5个"
+      value: "{{ $value }}"
+
+  - alert: reids client connection
+    expr: redis_connected_clients > 5000
+    for: 1m
+    labels:
+      name: redis
+      severity: Critical
+    annotations:
+      summary: "{{$labels.mountpoint}} redis client TooManyConnections"
+      description: "{{$labels.mountpoint }} redis client connection超过5000"
+      value: "{{ $value }}"
+
+  - alert: reids men usage
+    expr: redis_memory_used_bytes/ (1024 * 1024 ) > 4096
+    for: 1m
+    labels:
+      name: redis
+      severity: Critical
+    annotations:
+      summary: "{{$labels.mountpoint}} redis memory usage 超过4096MB！"
+      description: "{{$labels.mountpoint }} redis memory usage 超过4096MB"
+      value: "{{ $value }}"
+
+  - alert: reids outofmemory
+    expr: redis_memory_used_bytes / redis_memory_max_bytes  * 100 > 80 and redis_memory_max_bytes != 0
+    for: 1m
+    labels:
+      name: redis
+      severity: Critical
+    annotations:
+      summary: "{{$labels.mountpoint}} redis memory usage 使用率过高"
+      description: "{{$labels.mountpoint }} redis memory usage 使用率超过80%"
+      value: "{{ $value }}"
+
+  - alert: reids rejectedconnections
+    expr: increase(redis_rejected_connections_total[1m]) > 0
+    for: 1m
+    labels:
+      name: redis
+      severity: Critical
+    annotations:
+      summary: "rejected connections (instance {{ $labels.instance }})"
+      description: "{{$labels.mountpoint }} redis has been rejected"
+      value: "{{ $value }}"

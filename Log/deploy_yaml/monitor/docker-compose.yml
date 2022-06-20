@@ -1,0 +1,45 @@
+version: '3.7'
+
+services:
+  prometheus:
+    image: prom/prometheus:v2.25.0
+    hostname: prometheus
+    restart: always
+    user: root
+    ports: 
+      - "9090:9090"
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - /data/monitor/prometheus_data:/prometheus
+      - /etc/localtime:/etc/localtime:ro
+
+  alertmanager:
+    image: prom/alertmanager:v0.22.2
+    hostname: alertmanager
+    restart: always
+    user: root
+    ports:
+      - "9093:9093"
+    volumes:
+      - /data/monitor/alertmanager_data:/alertmanager
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+      - ./alertmanager/warn.tmpl:/etc/alertmanager/warn.tmpl
+      - /etc/localtime:/etc/localtime:ro
+
+  grafana:
+    image: reg.aixbx.com/pubcomp/grafana-grafana:8.3.3
+    hostname: grafana
+    restart: always
+    user: root
+    ports:
+      - "3000:3000"
+    volumes:
+      - /data/monitor/grafana_data:/var/lib/grafana
+      - /data/monitor/grafana_log:/var/log/grafana
+      - ./grafana/defaults.ini:/usr/share/grafana/conf/defaults.ini
+      - /etc/localtime:/etc/localtime:ro
+
+networks:
+  default:
+    external:
+      name: myapp
