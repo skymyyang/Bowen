@@ -147,7 +147,7 @@ upload_dist_artifacts:
   stage: upload_artifacts
   tags:
     - docker143
-  image: iqimei/node16:alpine-tools-v1
+  image: curlimages/curl:7.83.1  #这里由于每个阶段都会拉镜像，所以我们使用最小的镜像
   script:
     - echo "upload_dist_artifacts"
     - echo "curl -v -u $NEXUS3_AUTH --upload-file dist-${CI_COMMIT_SHORT_SHA}.tar.gz ${ARTIFACTORY_URL}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/dist-${CI_COMMIT_SHORT_SHA}.tar.gz"
