@@ -1,0 +1,66 @@
+## go语言学习笔记
+
+
+### 1. 通过goproxy设置代理，方便安装vscode插件
+参考网址：https://goproxy.cn/
+
+通用方法：
+$ go env -w GO111MODULE=on
+$ go env -w GOPROXY=https://goproxy.cn,direct
+
+
+### 2. 入门代码
+
+```
+package main  //声明文件所在的包，每个go文件必须有归属的包
+
+import "fmt"  //引入程序中所需要用的包，为了使用包下的 Println 函数
+
+func main() {  //main函数程序的主入口 
+	fmt.Println("hello,world!")        //在控制台打印输出   
+}
+```
+
+
+go build test.go 进行编译
+./test 执行
+
+go build -o hello.exe test.go //编译时候进行额外指定
+
+### 3. 注意事项
+
+- 以.go结尾
+- 程序的执行入口是main()函数
+- 严格区分大小写
+- 方法由一条条语句构成，每个语句后不需要分号，GO语言会在每行结尾后自动加分号；GO语言逐行进行编译，不能把多条语句写在同一行
+- 定义的变量或import包没有被使用到，则代码无法编译通过
+- 大括号是成对出现的，缺一不可
+
+
+
+
+### 4. 变量的声明方式
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
