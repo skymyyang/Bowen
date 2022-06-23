@@ -163,7 +163,7 @@ deploy-job:
   stage: deploy
   tags:
     - docker143
-  image: iqimei/alpine:v3.15-ssh
+  image: iqimei/alpine:v3.15-ssh-git
   script:
     - echo "deploy ${SSH_KNOWN_HOSTS}"
     - ls dist/dist-${CI_COMMIT_SHORT_SHA}.tar.gz
@@ -198,5 +198,21 @@ deploy-prd-job:
     - when: never
 #由于生产环境发布的特殊性，这里我们配置了手动执行。
 
+```
+
+
+
+
+
+### 定义镜像或者成品库时间戳
+
+```yaml
+before_script:
+  - echo "before-script!!"
+  - export COMMIT_TIMESTAMP=$(git show -s --format=%ct $CI_COMMIT_SHA)  #通过git命令获取时间戳
+  - export COMMIT_TIME=$(date -d@${COMMIT_TIME_STAMP} '+%Y%m%d%H%M%S')
+  - echo $COMMIT_TIME
+  
+# 这里我们可以给我们需要的成品通过获取提交的时间戳进行命名，便于成品库中查找。
 ```
 
