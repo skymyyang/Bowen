@@ -638,14 +638,16 @@ IP地址管理（IPAM）负责分配和管理cilium管理的网络终点（容�
 
    然后进行安装：
 
-               ```bash
+   ```bash
    helm install cilium --namespace kube-system ./cilium
    #如果后续还有其他value值进行更新，可通过如下命令：
    helm upgrade cilium --namespace kube-system ./cilium
-               ```
+   ```
+
+   
 
    最后进行验证：
-
+   
    ```
    root@unode1:/opt/helmrepo# cilium status
        /¯¯\
@@ -661,7 +663,7 @@ IP地址管理（IPAM）负责分配和管理cilium管理的网络终点（容�
                      cilium-operator    Running: 2
    Cluster Pods:     6/6 managed by Cilium
    Image versions    cilium             quay.io/cilium/cilium:v1.11.1@sha256:251ff274acf22fd2067b29a31e9fda94253d2961c061577203621583d7e85bd2: 3
-                     cilium-operator    quay.io/cilium/operator-generic:v1.11.1@sha256:977240a4783c7be821e215ead515da3093a10f4a7baea9f803511a2c2b44a235: 2
+                  cilium-operator    quay.io/cilium/operator-generic:v1.11.1@sha256:977240a4783c7be821e215ead515da3093a10f4a7baea9f803511a2c2b44a235: 2
    ```
 
    
@@ -701,6 +703,6 @@ IP地址管理（IPAM）负责分配和管理cilium管理的网络终点（容�
    
 
    
-
+   
    
 

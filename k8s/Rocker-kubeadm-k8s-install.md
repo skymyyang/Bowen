@@ -1,4 +1,6 @@
-## 基于Rocky Linux 8.5 和kubeadm 安装k8s
+## 基于Linux  8和kubeadm 安装生产可用的k8s集群
 
-### 添加镜像源
+### RockyLinux
+
+
 

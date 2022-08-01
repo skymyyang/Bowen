@@ -47,6 +47,7 @@ log_level = "warning"
     image = "iqimei/alpine:v3.15-ssh-git" #自定义基础镜像
     #最好自己构建一个help镜像，避免因无法拉取gitlab官网镜像，导致构建失败
     helper_image = "iqimei/gitlab-runner-helper:x86_64-febb2a09"
+    #开启特权模式
     privileged = true
     disable_entrypoint_overwrite = false
     oom_kill_disable = false
