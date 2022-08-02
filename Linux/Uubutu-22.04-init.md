@@ -288,15 +288,7 @@ $ sed -ri 's/^#(UseDNS )yes/\1no/' /etc/ssh/sshd_config
 优化文件最大打开数，在子配置文件中定义
 
 ```bash
-$ cat>/etc/security/limits.d/kubernetes.conf<<EOF
-*       soft    nproc   131072
-*       hard    nproc   131072
-*       soft    nofile  131072
-*       hard    nofile  131072
-root    soft    nproc   131072
-root    hard    nproc   131072
-root    soft    nofile  131072
-root    hard    nofile  131072
-EOF
+$ 
+
 ```
 
