@@ -768,6 +768,18 @@ $ openssl x509 -pubkey -in \
 $ kubectl completion bash > /etc/bash_completion.d/kubectl
 ```
 
+### 设置kube-apiserver的web健康检查
+
+设置endpoint的rbac
+
+kube-apiserver的web健康检查路由有权限，我们需要开放用来监控或者对接SLB的健康检查,yaml文件 https://github.com/zhangguanzhang/Kubernetes-ansible-base/blob/roles/master/files/healthz-rbac.yml 。因为网络因素而无法apply的话就自己下载或者赋值内容后创建文件后apply文件.
+
+```bash
+$ kubectl apply -f https://raw.githubusercontent.com/zhangguanzhang/Kubernetes-ansible-base/roles/master/files/healthz-rbac.yml
+```
+
+
+
 ### 添加node节点
 
 按照前面的步骤做
