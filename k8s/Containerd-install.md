@@ -55,6 +55,7 @@ drwxr-xr-x 3 root root        19 Jun  7 01:34 usr
 ```bash
 [root@k8s-rnode1 src]$ cp etc/crictl.yaml /etc/
 [root@k8s-rnode1 src]$ cp -ra etc/cni /etc/
+[root@k8s-rnode1 src]$ cp -ra opt/cni /opt/
 [root@k8s-rnode1 src]$ cp etc/systemd/system/containerd.service /usr/lib/systemd/system/
 [root@k8s-rnode1 src]$ cp -a usr/local/bin/* /usr/local/bin/
 [root@k8s-rnode1 src]$ cp -a usr/local/sbin/* /usr/local/sbin/

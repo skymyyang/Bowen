@@ -43,13 +43,13 @@
    #MulticastDNS=no
    #DNSSEC=no
    #Cache=yes
-   #DNSStubListener=yes
+   DNSStubListener=no
    ```
 
    LLMNR=设置的是禁止运行LLMNR(Link-Local Multicast Name Resolution)，否则systemd-resolve会监听5535端口。
 
    ```bash
-    rm /etc/reslove.conf
+    rm /etc/resolv.conf
     ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf
     systemctl restart systemd-resolved
    ```
