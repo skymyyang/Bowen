@@ -64,7 +64,7 @@ Helm 安装 *charts* 到 Kubernetes 集群中，每次安装都会创建一个�
 
 搜索`metrics-server`
 
-![metrics02](images\metrics-server-02.png)
+![metrics02](images/metrics-server-02.png)
 
 
 
