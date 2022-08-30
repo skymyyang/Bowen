@@ -237,3 +237,16 @@ nf_defrag_ipv6         20480  2 nf_conntrack,ip_vs
 libcrc32c              16384  3 nf_conntrack,xfs,ip_vs
 ```
 
+### 命令历史记录
+
+可选项配置`/etc/profile`
+
+```bash
+export PS1="[\u@\H \[\e[33;1m\]\w\[\e[37;0m\]]\$"
+export HISTTIMEFORMAT='%F %T '
+export PROMPT_COMMAND='{ date "+`whoami` `history 1 | { read x cmd; echo "$cmd"; }`"; } >> /var/opt/ldf_history'
+export JAVA_HOME=/usr/local/java
+export PATH=$PATH:$JAVA_HOME/bin:/usr/local/mysql/bin
+export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
+```
+

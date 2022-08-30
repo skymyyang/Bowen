@@ -1,4 +1,4 @@
-## 在kubernetes集群中部署MetalLB
+## 在kubernetes集群中部署MetalLB实现负载均衡
 
 ### 概述
 
@@ -48,6 +48,56 @@ MetaLB负责从主机维度实现负载均衡，而pod副本间的负载是通�
 
 
 ### 部署
+
+**MetalLB Operator 自定义资源**
+
+MetalLB Operator 监控其自己的命名空间以获取两个自定义资源：
+
+- `MetalLB`
+
+  当您在集群中添加 `MetalLB` 自定义资源时，MetalLB Operator 会在集群中部署 MetalLB。Operator 只支持单个自定义资源实例。如果删除了实例，Operator 会从集群中删除 MetalLB。
+
+- `AddressPool`
+
+  MetalLB 需要一个或多个 IP 地址池，您可以在添加类型为 `LoadBalancer` 的服务时分配给服务。当您在集群中添加 `AddressPool` 自定义资源时，MetalLB Operator 会配置 MetalLB，以便它能够从池中分配 IP 地址。地址池包含 IP 地址列表。列表可以是使用范围设置的单个 IP 地址，如 1.1.1.1-1.1.1.1、以 CIDR 表示法指定的范围、指定为起始和结束地址的范围，或者以连字符分隔的、两者的组合。地址池需要名称。文档使用 `doc-example`、`doc-example-reserved` 和 `doc-example-ipv6` 等名称。地址池指定 MetalLB 是否可以自动从池中分配 IP 地址，或者是否为按名称显式指定池的服务保留 IP 地址。
+
+将 `MetalLB` 自定义资源添加到集群后，Operator 将部署 MetalLB、MetalLB 软件组件、`controller` 和 `speaker`。
+
+安装 MetalLB Operator 时，`metallb-operator-controller-manager` 部署会启动一个 pod。pod 是 Operator 的实施。pod 监控 `MetalLB` 自定义资源和 `AddressPool` 自定义资源的更改。
+
+当 Operator 启动 MetalLB 实例时，它会启动一个 `controller` 部署和一个 `speaker` 守护进程集。
+
+- `controller`
+
+  Operator 会启动部署和单个 pod。当您添加类型为 `LoadBalancer` 的服务时，Kubernetes 使用 `controller` 从地址池中分配 IP 地址。如果出现服务失败，请验证 `控制器` pod 日志中是否有以下条目：
+
+  ```terminal
+  "event":"ipAllocated","ip":"172.22.0.201","msg":"IP address assigned by controller
+  ```
+
+- `speaker`
+
+  Operator 会为集群中的每个节点启动一个带有一个 `speaker` pod 的守护进程集。`如果控制器` 将 IP 地址分配给服务，且服务仍不可用，请阅读 `speaker` pod 日志。如果 `发言人` pod 不可用，请运行 `oc describe pod -n` 命令。
+
+  对于第 2 层模式，在 `controller` 为服务分配 IP 地址后，每个 `speaker` Pod 决定它是否与服务的端点位于同一个节点上。涉及对节点名称和服务名称进行哈希的算法用于选择一个 `speaker` Pod 来宣布负载均衡器 IP 地址。`speaker` 使用地址解析协议 (ARP) 来宣布 IPv4 地址和邻居发现协议 (NDP) 来宣布 IPv6 地址。
+
+  对负载均衡器 IP 地址的请求会路由到具有声明 IP 地址的 `speaker` 的节点。节点接收数据包后，服务代理会将数据包路由到该服务的端点。在最佳情况下，端点可以位于同一节点上，也可以位于另一节点上。每次建立连接时，服务代理都会选择一个端点。
+
+**第 2 层模式的 MetalLB 概念**
+
+在第 2 层模式中，一个节点上的 `speaker` pod 向主机网络宣布服务的外部 IP 地址。从网络的角度来看，节点似乎有多个 IP 地址分配给网络接口。
+
+由于第 2 层模式依赖于 ARP 和 NDP，客户端必须位于没有中断服务的节点所在的同一子网，以便 MetalLB 正常工作。另外，分配给该服务的 IP 地址必须在客户端用来访问该服务的网络所在的同一子网中。
+
+`speaker` pod 响应 IPv4 服务和 IPv6 的 NDP 请求。
+
+在第 2 层模式中，服务 IP 地址的所有流量都通过一个节点进行路由。在流量进入节点后，CNI 网络供应商的服务代理会将流量分发到该服务的所有 pod。
+
+由于服务的所有流量都通过第 2 层模式中的单一节点进入，所以严格意义上，MetalLB 不会为第 2 层实施负载平衡器。相反，MetalLB 为第 2 层实施故障转移机制，以便在 `speaker` pod 不可用时，不同节点上的 `speaker` pod 可以宣布服务 IP 地址。
+
+当节点不可用时，自动故障转移。其他节点上的 `speaker` pod 检测到节点不可用，新的 `speaker` pod 和节点从故障节点上拥有服务 IP 地址的所有权。
+
+
 
 **环境要求**
 
