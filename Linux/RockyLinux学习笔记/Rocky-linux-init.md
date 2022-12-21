@@ -86,6 +86,13 @@ sed -i 's|^#baseurl=https://download.example/pub|baseurl=https://mirrors.aliyun.
 sed -i 's|^metalink|#metalink|' /etc/yum.repos.d/epel*
 ```
 
+#### AlmaLinux 修改EPEL源
+
+```bash
+sed -i 's|^#baseurl=https://download.fedoraproject.org/pub|baseurl=https://mirrors.aliyun.com|' /etc/yum.repos.d/epel*
+sed -i 's|^metalink|#metalink|' /etc/yum.repos.d/epel*
+```
+
 ### ulimt参数优化
 
 修改文件句柄数优化,需要重启。
