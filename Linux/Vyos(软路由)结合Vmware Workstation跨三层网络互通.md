@@ -154,24 +154,44 @@ vyos@vyos01# commit
 vyos@vyos01# save
 ```
 
-1. 配置vmware workstation上虚拟机的路由
+2. 配置vmware workstation上虚拟机的路由
 
 ```plain
 route add -host 192.168.5.202/32 gw 192.168.74.5
 ```
 
-1. 配置工作站上的Windows机器的路由
+3. 配置工作站上的Windows机器的路由
 
 ```plain
 PS C:\Users\Administrator> route ADD 192.168.74.0 MASK 255.255.255.0 192.168.5.210
 ```
 
-1. 进行测试
+4. 进行测试
 
 ```plain
 PS C:\Users\Administrator> ssh root@192.168.74.101
 ```
 
-1. 验证成功
+5. 验证成功
 
 ![img](images/vyos-05.png)
+
+
+## 配置为SNAT模式
+
+eth0 为能够上网的那个接口
+source address 是想要配置的地址段
+最后一个可以理解为地址欺骗
+
+```
+configure
+
+# 配置源NAT（SNAT）
+set nat source rule 100 outbound-interface eth0
+set nat source rule 100 source address 192.168.160.0/24
+set nat source rule 100 translation address masquerade
+
+commit
+save
+exit
+```
