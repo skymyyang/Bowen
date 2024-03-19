@@ -47,7 +47,7 @@ http://mirror.sliqua.com/vyos/iso/release/1.1.8/
 
 
 配置eth0的IP地址，并设置SSH远程连接
-
+默认用户名和密码均为vyos
 vyos与我们常用的硬件路由器和交换机一样，使用`tab`键补全命令
 
 ```plain
